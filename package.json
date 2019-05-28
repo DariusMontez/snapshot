@@ -10,6 +10,7 @@
   "author": "Darius Montez <darius.montez@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "@polymer/app-layout": "^3.0.2",
     "express": "^4.16.3"
   }
 }
