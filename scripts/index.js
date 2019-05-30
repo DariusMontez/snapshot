@@ -1,5 +1,8 @@
 // Data Model
 
+import _ from '/scripts/elements.js'
+import data from '/scripts/mock-data.js'
+
 const Team = {
     create({name, photoURL, snaps=[]}) {
         return {
@@ -10,25 +13,10 @@ const Team = {
     }
 };
 
-let data = {
-    teams: [
-        {name: "Will + Joe", photoURL: "http://lorempixel.com/48/48"},
-        {name: "Sam + Bob", photoURL: "http://lorempixel.com/48/48"},
-        {name: "Rob + Jef", photoURL: "http://lorempixel.com/48/48"},
-        {name: "Tom + Sue", photoURL: "http://lorempixel.com/48/48"},
-        {name: "Terry + Pam", photoURL: "http://lorempixel.com/48/48"},
-        {name: "Mac + Mat", photoURL: "http://lorempixel.com/48/48"},
-        {name: "Claire + Jim", photoURL: "http://lorempixel.com/48/48"},
-        {name: "Riley + Josh", photoURL: "http://lorempixel.com/48/48"},
-    ].map(Team.create),
-}
-
 // populate UI with data
 
 const me = data.teams[0];
 me.snaps = ["Tom + Sue", "Mac + Mat"];
-
-const _ = uiElement;
 
 const $hitlist = document.getElementById("hitlist");
 
@@ -68,3 +56,30 @@ const otherTeams = data.teams.filter(t => t.name != me.name);
 
 $hitlist.render(me, otherTeams);
 
+const $progress = document.getElementById("progress");
+$progress.textContent = `${me.snaps.length} / ${otherTeams.length}`;
+
+// DOM events
+
+const $drawer = document.getElementById("drawer");
+
+const $drawerHandle = document.getElementById("drawer-handle");
+$drawerHandle.onclick = function() {
+    $drawer.open = true;
+}
+
+const $captureButton = document.getElementById("camera-click");
+$captureButton.addEventListener("capture", e => {
+    console.log("image captured!");
+    console.log(e.data);
+
+    // create a hyperlink to the image's src
+
+    const a = document.createElement("a");
+    a.href = e.data.capturedImage.src;
+    a.download = `${new Date()}.png`;
+    console.log(a);
+    document.body.append(a);
+    a.click();
+    a.remove();
+});

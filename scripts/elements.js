@@ -35,3 +35,5 @@ function uiElement(elType, attributes, ...content) {
 
     return element;
 }
+
+export default uiElement;
