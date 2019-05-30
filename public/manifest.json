@@ -4,7 +4,7 @@
   "description": "Which team will be the first to snap a photo of all the others?",
 
   "theme_color": "#000000",
-  "background_color": "transparent",
+  "background_color": "#000000",
   "splash_pages": null,
 
   "display": "standalone",
