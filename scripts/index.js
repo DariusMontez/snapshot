@@ -16,48 +16,84 @@ const Team = {
 // populate UI with data
 
 const me = data.teams[0];
-me.snaps = ["Tom + Sue", "Mac + Mat"];
+me.snaps = [];
 
 const $hitlist = document.getElementById("hitlist");
 
-$hitlist.renderRow = function({team, isSnapped}) {
-    if (isSnapped) {
-        return _("li", {class: "snapped"},
-            team.name,
-            _("img", {src: team.photoURL, class: "circle"}),
-            _("i", {class: "material-icons check-overlay", check_circle: ""}, "check_circle"),
-        );
+function HitlistRow({team}) {
+    const el = _("li", {},
+        team.name,
+        _("img", {src: team.photoURL, class: "circle"}),
+    );
 
-    }  else {
-        return _("li", {},
-            team.name,
-            _("img", {src: team.photoURL, class: "circle"}),
-        );
+    el.team = team;
+
+    Object.defineProperty(el, "snapped", {
+        get() {
+            return me.snaps.includes(team.name);
+        },
+        set(value) {
+            if (value) {
+                me.snaps.push(team.name);
+            } else {
+                delete me.snaps[me.snaps.indexOf(team.name)];
+            }
+
+            el.update();
+        }
+    });
+
+    el.update = function() {
+        if (el.snapped) {
+            el.classList.add("snapped");
+            el.icon = _("i", {class: "material-icons check-overlay"}, "check_circle");
+            el.appendChild(el.icon);
+        } else {
+            el.classList.remove("snapped");
+
+            if (!!el.icon) {
+                el.icon.remove();
+            }
+        }
     }
+
+    el.update();
+
+    return el;
 }
 
-$hitlist.render = function(me, teams) {
-    const ul = this.querySelector("ul");
-    while (ul.firstChild) {
-        ul.removeChild(ul.firstChild);
+function Hitlist() {
+    const el = _("ul");
+
+    el.update = function() {
+        while (el.firstChild) {
+            el.removeChild(el.firstChild);
+        }
+
+        const otherTeams = data.teams.filter(t => t.name != me.name);
+
+        for (let team of otherTeams) {
+            const row = new HitlistRow({team});
+            row.onclick = e => {
+                row.snapped = !row.snapped;
+                // console.log(`Row click: ${row.team.name}. snapped=${row.snapped}`);
+
+            };
+            el.appendChild(row);
+        }
+
+        $progress.textContent = `${me.snaps.length} / ${otherTeams.length}`;
     }
 
-    for (let team of teams) {
-        const row = this.renderRow({
-            team,
-            isSnapped: me.snaps.includes(team.name)
-        });
+    el.update();
 
-        ul.appendChild(row);
-    }
+    return el;
 }
 
-const otherTeams = data.teams.filter(t => t.name != me.name);
-
-$hitlist.render(me, otherTeams);
 
 const $progress = document.getElementById("progress");
-$progress.textContent = `${me.snaps.length} / ${otherTeams.length}`;
+
+$hitlist.appendChild(new Hitlist());
 
 // DOM events
 
