@@ -77,7 +77,7 @@ function Hitlist() {
             row.onclick = e => {
                 row.snapped = !row.snapped;
                 // console.log(`Row click: ${row.team.name}. snapped=${row.snapped}`);
-
+                $progress.textContent = `${me.snaps.length} / ${otherTeams.length}`;
             };
             el.appendChild(row);
         }

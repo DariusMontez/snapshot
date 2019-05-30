@@ -43,16 +43,24 @@ if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
 }
 
 const $videoStream = document.getElementById("video-stream");
-$videoStream.width = document.body.offsetWidth;
-$videoStream.height = document.body.offsetHeight;
+
+window.onresize = e => {
+    $videoStream.width = document.body.offsetWidth;
+    $videoStream.height = document.body.offsetHeight;
+};
+window.onresize();
+
+
 
 const medaConstraints = {
     audio: false,
     video: {
         facingMode: "environment",
-        frameRate: 10,
-        width: $videoStream.width,
-        height: $videoStream.height,
+        // frameRate: 10,
+        // width: $videoStream.width,
+        // height: $videoStream.height,
+        width: 1920,
+        height: 1080,
     }
 };
 
