@@ -1,11 +1,11 @@
 {
-  "name": "PWA Template",
-  "short_name": "PWA Template",
-  "description": "A template/boilerplate PWA application.",
+  "name": "Snapshot",
+  "short_name": "Snapshot",
+  "description": "Which team will be the first to snap a photo of all the others?",
 
   "theme_color": "#000000",
   "background_color": "transparent",
-  "splash_pages": null
+  "splash_pages": null,
 
   "display": "standalone",
   "orientation": "any",

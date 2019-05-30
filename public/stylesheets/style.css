@@ -19,6 +19,9 @@ body {
 
     height: 100%;
     background-color: black;
+
+    /* fix needed for Chrome to bring video to back */
+    z-index: -1;
 }
 
 #drawer {
