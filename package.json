@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@polymer/app-layout": "^3.0.2",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "jsqr": "^1.2.0"
   }
 }

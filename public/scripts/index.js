@@ -2,6 +2,7 @@
 
 import _ from '/scripts/elements.js'
 import data from '/scripts/mock-data.js'
+import {captureImageData} from '/scripts/camera.js'
 
 const Team = {
     create({name, photoURL, snaps=[]}) {
@@ -107,7 +108,7 @@ $drawerHandle.onclick = function() {
 const $captureButton = document.getElementById("camera-click");
 $captureButton.addEventListener("capture", e => {
     console.log("image captured!");
-    console.log(e.data);
+    // console.log(e.data);
 
     // create a hyperlink to the image's src
 
@@ -118,4 +119,36 @@ $captureButton.addEventListener("capture", e => {
     document.body.append(a);
     a.click();
     a.remove();
+
 });
+
+function pollQR() {
+
+
+    // let bg = getComputedStyle($captureButton).backgroundColor;
+
+
+    const imageData = captureImageData();
+
+
+    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: "dontInvert",
+    });
+
+    if (code !== null) {
+        console.log(`QR code: ${code.data}`)
+
+        $captureButton.style.backgroundColor = "green";
+
+        // window.location = code.data;
+        alert(code.data);
+    } else {
+        $captureButton.style.backgroundColor = null;
+    }
+
+    setTimeout(pollQR, 200);
+    // requestAnimationFrame(pollQR);
+}
+
+setTimeout(pollQR, 3000);
+// pollQR();

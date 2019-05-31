@@ -84,24 +84,41 @@ const $captureSound = document.createElement("audio");
 
 $captureSound.src = "/audio/42899__freqman__canon-dos-d30-no-focus.wav";
 
+function captureImageData() {
+    // draw video frame to canvas
+
+    const $captureCanvas = document.createElement("canvas");
+
+    $captureCanvas.width = $videoStream.width;
+    $captureCanvas.height = $videoStream.height;
+
+    const ctx = $captureCanvas.getContext("2d");
+    ctx.drawImage($videoStream, 0, 0, $videoStream.width, $videoStream.height);
+
+    // get an ImageData object
+    return ctx.getImageData(0, 0, $captureCanvas.width, $captureCanvas.height);
+}
+
+function imageFromData(imageData) {
+    const canvas = document.createElement("canvas");
+    canvas.width = imageData.width;
+    canvas.height = imageData.height;
+    const ctx = canvas.getContext("2d");
+    ctx.putImageData(imageData, 0, 0);
+
+    const image = new Image();
+    image.src = canvas.toDataURL("image/png");
+    return image;
+}
+
 const $captureButton = document.getElementById("camera-click");
 $captureButton.onclick = e => {
 
     // play capture sound!
     $captureSound.play();
 
-    // draw video frame to canvas
-
-    $captureCanvas.width = $videoStream.width;
-    $captureCanvas.height = $videoStream.height;
-
-    const ctx = $captureCanvas.getContext("2d");
-    ctx.drawImage($videoStream, 0, 0);
-
-    // create image from canvas data
-    // use webp format. Older browsers will fall back to png.
-    const capturedImage = new Image();
-    capturedImage.src = $captureCanvas.toDataURL("image/webp");
+    const imageData = captureImageData();
+    const capturedImage = imageFromData(imageData);
 
     // broadcast custom "capture" event with image
 
@@ -109,6 +126,9 @@ $captureButton.onclick = e => {
     captureEvent.data = {capturedImage};
 
     $captureButton.dispatchEvent(captureEvent);
+}
 
-
+export {
+    captureImageData,
+    imageFromData,
 }
