@@ -3,7 +3,6 @@
 import _ from '/scripts/elements.js'
 // import data from '/scripts/mock-data.js'
 import {CameraPage, captureImageData} from '/scripts/camera.js'
-import data from '/scripts/mock-data.js'
 
 const Player = {
     create({name, photoURL, snaps=[]}) {
@@ -58,6 +57,8 @@ function MainPage() {
             _("i", {class: "material-icons"}, "playlist_add_check"),
         ),
     );
+
+    el.$camera = $camera;
 
     return el;
 }
@@ -251,12 +252,12 @@ Object.assign(window, {
 });
 
 function pollQR() {
-
+    const $captureButton = $mainPage.$camera.querySelector(".camera-click");
 
     // let bg = getComputedStyle($captureButton).backgroundColor;
 
 
-    const imageData = captureImageData();
+    const imageData = captureImageData($mainPage.$camera.$videoStream);
 
 
     const code = jsQR(imageData.data, imageData.width, imageData.height, {
@@ -278,5 +279,7 @@ function pollQR() {
     // requestAnimationFrame(pollQR);
 }
 
-setTimeout(pollQR, 3000);
-// pollQR();
+// QR-CODE READ LOOP
+// =================
+
+// setTimeout(pollQR, 3000);
