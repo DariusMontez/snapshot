@@ -16,7 +16,7 @@
       rel="stylesheet">
     <script src="/register-service-worker.js"></script>
     <script src="scripts/mock-data.js" defer type="module"></script>
-    <script src="scripts/elements.js" defer type="module"></script>s
+    <script src="scripts/elements.js" defer type="module"></script>
     <script src="/scripts/camera.js" defer type="module"></script>
     <script src="/scripts/index.js" defer type="module"></script>
     <link rel="stylesheet" href="stylesheets/style.css">
@@ -34,23 +34,28 @@
 </head>
 <body>
 
-    <video id="video-stream" autoplay></video>
-    <button id="camera-click" aria-label="take photo"></button>
+    <div class="page" id="main-page">
 
-    <div id="drawer-handle">
-        <i class="material-icons">playlist_add_check</i>
-    </div>
+        <video id="video-stream" autoplay></video>
+        <button id="camera-click" aria-label="take photo"></button>
 
-
-    <side-drawer id="drawer">
-        <p style="font-size:24px; text-align: center;">Will + Joe</p>
-
-        <div id="hitlist">
-            <ul>
-            </ul>
+        <div id="drawer-handle">
+            <i class="material-icons">playlist_add_check</i>
         </div>
 
-        <p id="progress" style="font-size:24px; text-align:center;">5 / 8</p>
+    </div>
+
+    <side-drawer id="drawer">
+        <div id="drawer-content">
+            <p style="font-size:24px; text-align: center;">Will + Joe</p>
+
+            <div id="hitlist">
+            </div>
+
+            <p id="progress" style="font-size:24px; text-align:center;">5 / 8</p>
+            <button id="btn-add-player">Add Player</button>
+        </div>
+
     </side-drawer>
 
     <!-- <div id="victors"></div> -->
