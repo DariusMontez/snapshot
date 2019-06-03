@@ -95,29 +95,41 @@ function CameraPage() {
     // const $captureButton = document.getElementById("camera-click");
     $captureButton.onclick = e => {
 
-        // play capture sound!
-        $captureSound.play();
+function captureImageData() {
+    // draw video frame to canvas
 
-        // draw video frame to canvas
-        window.onresize();
-        console.log(`Resizing capture canvas from ${$captureCanvas.width}x${$captureCanvas.height}
-        to ${$videoStream.width}x${$videoStream.height}`);
-        $captureCanvas.width = $videoStream.width;
-        $captureCanvas.height = $videoStream.height;
+    const $captureCanvas = document.createElement("canvas");
 
-        const ctx = $captureCanvas.getContext("2d");
-        ctx.drawImage($videoStream, 0, 0);
+    $captureCanvas.width = $videoStream.width;
+    $captureCanvas.height = $videoStream.height;
 
-        // create image from canvas data
-        // use webp format. Older browsers will fall back to png.
-        const capturedImage = new Image();
-        capturedImage.src = $captureCanvas.toDataURL("image/webp");
+    const ctx = $captureCanvas.getContext("2d");
+    ctx.drawImage($videoStream, 0, 0, $videoStream.width, $videoStream.height);
 
-        // not necessary. This is just for the event handler in case it is curious
-        capturedImage.width = $captureCanvas.width;
-        capturedImage.height = $captureCanvas.height;
+    // get an ImageData object
+    return ctx.getImageData(0, 0, $captureCanvas.width, $captureCanvas.height);
+}
 
-        // broadcast custom "capture" event with image
+function imageFromData(imageData) {
+    const canvas = document.createElement("canvas");
+    canvas.width = imageData.width;
+    canvas.height = imageData.height;
+    const ctx = canvas.getContext("2d");
+    ctx.putImageData(imageData, 0, 0);
+
+    const image = new Image();
+    image.src = canvas.toDataURL("image/png");
+    return image;
+}
+
+const $captureButton = document.getElementById("camera-click");
+$captureButton.onclick = e => {
+
+    // play capture sound!
+    $captureSound.play();
+
+    const imageData = captureImageData();
+    const capturedImage = imageFromData(imageData);
 
         const captureEvent = new CustomEvent("capture", {
             bubbles: true,
@@ -133,5 +145,7 @@ function CameraPage() {
 }
 
 export {
+    captureImageData,
+    imageFromData,
     CameraPage
 }
