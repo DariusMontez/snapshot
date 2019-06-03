@@ -87,21 +87,40 @@ function CameraPage() {
     // IMAGE CAPTURE
     // =============
 
-    const $captureCanvas = document.createElement("canvas");
+    // const $captureCanvas = document.createElement("canvas");
     const $captureSound = document.createElement("audio");
 
     $captureSound.src = "/audio/42899__freqman__canon-dos-d30-no-focus.wav";
 
-    // const $captureButton = document.getElementById("camera-click");
     $captureButton.onclick = e => {
+        // play capture sound!
+        $captureSound.play();
 
-function captureImageData() {
+        const imageData = captureImageData($videoStream);
+        const capturedImage = imageFromData(imageData);
+
+        const captureEvent = new CustomEvent("capture", {
+            bubbles: true,
+        });
+        captureEvent.data = {capturedImage};
+
+        el.dispatchEvent(captureEvent);
+    };
+
+    el.$videoStream = $videoStream;
+
+    return el;
+}
+
+function captureImageData($videoStream) {
     // draw video frame to canvas
 
     const $captureCanvas = document.createElement("canvas");
-
+    window.onresize();
     $captureCanvas.width = $videoStream.width;
     $captureCanvas.height = $videoStream.height;
+
+    console.log($captureCanvas.width, $videoStream.width);
 
     const ctx = $captureCanvas.getContext("2d");
     ctx.drawImage($videoStream, 0, 0, $videoStream.width, $videoStream.height);
@@ -120,28 +139,6 @@ function imageFromData(imageData) {
     const image = new Image();
     image.src = canvas.toDataURL("image/png");
     return image;
-}
-
-const $captureButton = document.getElementById("camera-click");
-$captureButton.onclick = e => {
-
-    // play capture sound!
-    $captureSound.play();
-
-    const imageData = captureImageData();
-    const capturedImage = imageFromData(imageData);
-
-        const captureEvent = new CustomEvent("capture", {
-            bubbles: true,
-        });
-        captureEvent.data = {capturedImage};
-
-        el.dispatchEvent(captureEvent);
-
-
-    }
-
-    return el;
 }
 
 export {
