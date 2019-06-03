@@ -1,7 +1,8 @@
 // Data Model
 
 import _ from '/scripts/elements.js'
-import data from '/scripts/mock-data.js'
+// import data from '/scripts/mock-data.js'
+import {CameraPage} from '/scripts/camera.js'
 
 const Player = {
     create({name, photoURL, snaps=[]}) {
@@ -10,11 +11,56 @@ const Player = {
             photoURL,
             snaps, // [Player]
         };
+    },
+
+    add(player) {
+        data.teams.push(player);
+        commitData();
+    },
+
+    addSnap(player, other) {
+        player.snaps.push(other.name);
+        commitData();
+    },
+
+    removeSnap(player, other) {
+        const index = player.snaps.indexOf(other.name);
+        player.snaps.splice(index, 1);
+        commitData();
     }
 };
 
-const me = data.teams[0];
-me.snaps = [];
+function commitData() {
+    localStorage.setItem("data", JSON.stringify(data));
+}
+
+function getData(initial={}) {
+    return JSON.parse(localStorage.getItem("data")) || initial;
+}
+
+const initialData = {
+    me: {name: "Drew + Cassie", photoURL: "https://lorempixel.com/48/48", snaps: []},
+    teams: [
+
+    ],
+};
+
+let data = getData(initialData);
+
+// MAIN PAGE
+function MainPage() {
+    const el = _("div", {class: "page", id: "main-page"},
+        new CameraPage(),
+        _("div", {id: "drawer-handle"},
+            _("i", {class: "material-icons"}, "playlist_add_check"),
+        ),
+    );
+
+    return el;
+}
+
+const $mainPage = new MainPage();
+document.body.appendChild($mainPage);
 
 // SIDE DRAWER
 // ===========
@@ -28,6 +74,12 @@ $drawerHandle.onclick = function() {
 
 const $progress = document.getElementById("progress");
 
+// Header
+// ------
+
+const $header = document.getElementById("header");
+$header.textContent = data.me.name;
+
 
 // Hit List
 // --------
@@ -35,7 +87,6 @@ const $progress = document.getElementById("progress");
 
 
 function HitlistRow({team}) {
-    // console.log(`HitlistRow({${JSON.stringify(team)}})`)
     const el = _("li", {},
         team.name,
         _("img", {src: team.photoURL, class: "circle"}),
@@ -45,13 +96,13 @@ function HitlistRow({team}) {
 
     Object.defineProperty(el, "snapped", {
         get() {
-            return me.snaps.includes(team.name);
+            return data.me.snaps.includes(team.name);
         },
         set(value) {
             if (value) {
-                me.snaps.push(team.name);
+                Player.addSnap(data.me, team);
             } else {
-                delete me.snaps[me.snaps.indexOf(team.name)];
+                Player.removeSnap(data.me, team);
             }
 
             el.update();
@@ -85,20 +136,17 @@ function Hitlist({el=_("ul")}) {
             el.removeChild(el.firstChild);
         }
 
-        const otherTeams = data.teams.filter(t => t.name != me.name);
-
-
-        for (let team of otherTeams) {
+        for (let team of data.teams) {
             const row = new HitlistRow({team});
             row.onclick = e => {
                 row.snapped = !row.snapped;
                 // console.log(`Row click: ${row.team.name}. snapped=${row.snapped}`);
-                $progress.textContent = `${me.snaps.length} / ${otherTeams.length}`;
+                $progress.textContent = `${data.me.snaps.length} / ${data.teams.length}`;
             };
             el.appendChild(row);
         }
 
-        $progress.textContent = `${me.snaps.length} / ${otherTeams.length}`;
+        $progress.textContent = `${data.me.snaps.length} / ${data.teams.length}`;
     }
 
     el.update();
@@ -111,6 +159,7 @@ const $hitlist = new Hitlist({el: document.getElementById("hitlist")});
 
 Object.assign(window, {
     $hitlist,
+    data,
 })
 
 // Add Player
@@ -136,7 +185,7 @@ function AddPlayerPage() {
 
         console.log("New player added:", newPlayer);
 
-        data.teams.push(newPlayer);
+        Player.add(newPlayer);
         $hitlist.update();
 
         el.remove();
@@ -150,8 +199,9 @@ document.getElementById("btn-add-player").onclick = () => {
 
     const page = new AddPlayerPage();
     document.body.appendChild(page);
-    console.log("add player");
 };
+
+
 
 // CAMERA
 // ======
