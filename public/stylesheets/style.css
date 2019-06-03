@@ -31,6 +31,10 @@ body {
     background: white;
 }
 
+#camera-page {
+    display: grid;
+}
+
 #video-stream {
     grid-column: 1/4;
     grid-row: 1/3;
