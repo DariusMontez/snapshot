@@ -3,24 +3,39 @@
 import _ from '/scripts/elements.js'
 import data from '/scripts/mock-data.js'
 
-const Team = {
+const Player = {
     create({name, photoURL, snaps=[]}) {
         return {
             name,
             photoURL,
-            snaps, // [Team]
+            snaps, // [Player]
         };
     }
 };
 
-// populate UI with data
-
 const me = data.teams[0];
 me.snaps = [];
 
-const $hitlist = document.getElementById("hitlist");
+// SIDE DRAWER
+// ===========
+
+const $drawer = document.getElementById("drawer");
+
+const $drawerHandle = document.getElementById("drawer-handle");
+$drawerHandle.onclick = function() {
+    $drawer.open = true;
+}
+
+const $progress = document.getElementById("progress");
+
+
+// Hit List
+// --------
+
+
 
 function HitlistRow({team}) {
+    // console.log(`HitlistRow({${JSON.stringify(team)}})`)
     const el = _("li", {},
         team.name,
         _("img", {src: team.photoURL, class: "circle"}),
@@ -62,8 +77,8 @@ function HitlistRow({team}) {
     return el;
 }
 
-function Hitlist() {
-    const el = _("ul");
+function Hitlist({el=_("ul")}) {
+    // const el = _("ul");
 
     el.update = function() {
         while (el.firstChild) {
@@ -71,6 +86,7 @@ function Hitlist() {
         }
 
         const otherTeams = data.teams.filter(t => t.name != me.name);
+
 
         for (let team of otherTeams) {
             const row = new HitlistRow({team});
@@ -90,22 +106,60 @@ function Hitlist() {
     return el;
 }
 
+const $hitlist = new Hitlist({el: document.getElementById("hitlist")});
 
-const $progress = document.getElementById("progress");
 
-$hitlist.appendChild(new Hitlist());
+Object.assign(window, {
+    $hitlist,
+})
 
-// DOM events
+// Add Player
+// ----------
 
-const $drawer = document.getElementById("drawer");
+function AddPlayerPage() {
+    const el = _("div", {class: "page", id: "add-player-page"},
+        "Player's name",
+        _("input", {name: "name"}),
+        _("button", {}, "Add Player!")
+    );
 
-const $drawerHandle = document.getElementById("drawer-handle");
-$drawerHandle.onclick = function() {
-    $drawer.open = true;
+    const $name = el.querySelector("input[name=name]");
+    const $btn = el.querySelector("button");
+    $btn.onclick = addPlayer;
+
+    function addPlayer() {
+        const newPlayer = {
+            name: $name.value,
+            photoURL: "https://lorempixel.com/48/48",
+            snaps: [],
+        };
+
+        console.log("New player added:", newPlayer);
+
+        data.teams.push(newPlayer);
+        $hitlist.update();
+
+        el.remove();
+    }
+
+    return el;
 }
 
+document.getElementById("btn-add-player").onclick = () => {
+    $drawer.open = false;
+
+    const page = new AddPlayerPage();
+    document.body.appendChild(page);
+    console.log("add player");
+};
+
+// CAMERA
+// ======
+
 const $captureButton = document.getElementById("camera-click");
-$captureButton.addEventListener("capture", e => {
+$captureButton.addEventListener("capture", downloadCapturedImage);
+
+function downloadCapturedImage(e) {
     console.log("image captured!");
     console.log(e.data);
 
@@ -118,4 +172,4 @@ $captureButton.addEventListener("capture", e => {
     document.body.append(a);
     a.click();
     a.remove();
-});
+}
