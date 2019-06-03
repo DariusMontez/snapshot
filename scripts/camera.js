@@ -117,13 +117,13 @@ function captureImageData($videoStream) {
 
     const $captureCanvas = document.createElement("canvas");
     window.onresize();
-    $captureCanvas.width = $videoStream.width;
-    $captureCanvas.height = $videoStream.height;
+    $captureCanvas.width = $videoStream.videoWidth;
+    $captureCanvas.height = $videoStream.videoHeight;
 
-    console.log($captureCanvas.width, $videoStream.width);
+    console.log($captureCanvas.videoWidth, $videoStream.videoWidth);
 
     const ctx = $captureCanvas.getContext("2d");
-    ctx.drawImage($videoStream, 0, 0, $videoStream.width, $videoStream.height);
+    ctx.drawImage($videoStream, 0, 0, $videoStream.videoWidth, $videoStream.videoHeight);
 
     // get an ImageData object
     return ctx.getImageData(0, 0, $captureCanvas.width, $captureCanvas.height);
