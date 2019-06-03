@@ -49,8 +49,10 @@ let data = getData(initialData);
 
 // MAIN PAGE
 function MainPage() {
-    const el = _("div", {class: "page", id: "main-page"},
-        new CameraPage(),
+    const $camera = new CameraPage();
+
+    const el = _("div", {class: "page main-page"},
+        $camera,
         _("div", {id: "drawer-handle"},
             _("i", {class: "material-icons"}, "playlist_add_check"),
         ),
@@ -71,6 +73,13 @@ const $drawerHandle = document.getElementById("drawer-handle");
 $drawerHandle.onclick = function() {
     $drawer.open = true;
 }
+
+$drawer.querySelector(".btn-add-player").onclick = () => {
+    $drawer.open = false;
+
+    const page = new AddPlayerPage();
+    document.body.appendChild(page);
+};
 
 const $progress = document.getElementById("progress");
 
@@ -157,31 +166,50 @@ function Hitlist({el=_("ul")}) {
 const $hitlist = new Hitlist({el: document.getElementById("hitlist")});
 
 
-Object.assign(window, {
-    $hitlist,
-    data,
-})
-
 // Add Player
 // ----------
 
 function AddPlayerPage() {
-    const el = _("div", {class: "page", id: "add-player-page"},
+    const el = _("div", {class: "page add-player-page"},
         "Player's name",
         _("input", {name: "name"}),
-        _("button", {}, "Add Player!")
+        _("button", {name: "add-photo"}, "Take photo"),
+        _("button", {name: "submit"}, "Add Player!"),
+
+        _("img", {name: "photo-preview"}),
     );
 
     const $name = el.querySelector("input[name=name]");
-    const $btn = el.querySelector("button");
-    $btn.onclick = addPlayer;
+    const $addPhotoBtn = el.querySelector("button[name=add-photo]");
+    const $submitBtn = el.querySelector("button[name=submit]");
+    const $photoPreview = el.querySelector("img[name=photo-preview]");
+
+    const newPlayer = {
+        name: null,
+        photoURL: "https://lorempixel.com/48/48",
+        snaps: [],
+    };
+
+    $addPhotoBtn.onclick = () => {
+        const cameraPage = new CameraPage();
+        document.body.appendChild(cameraPage);
+        window.onresize(); // let cameraPage take up the screen
+
+        cameraPage.addEventListener("capture", e => {
+            const image = e.data.capturedImage;
+            console.log(`captured and image! ${image.width}x${image.height}`);
+
+            $photoPreview.src = image.src;
+            newPlayer.photoURL = image.src;
+
+            cameraPage.remove();
+        });
+    }
+
+    $submitBtn.onclick = addPlayer;
 
     function addPlayer() {
-        const newPlayer = {
-            name: $name.value,
-            photoURL: "https://lorempixel.com/48/48",
-            snaps: [],
-        };
+        newPlayer.name = $name.value;
 
         console.log("New player added:", newPlayer);
 
@@ -194,20 +222,11 @@ function AddPlayerPage() {
     return el;
 }
 
-document.getElementById("btn-add-player").onclick = () => {
-    $drawer.open = false;
-
-    const page = new AddPlayerPage();
-    document.body.appendChild(page);
-};
-
-
 
 // CAMERA
 // ======
 
-const $captureButton = document.getElementById("camera-click");
-$captureButton.addEventListener("capture", downloadCapturedImage);
+$mainPage.addEventListener("capture", downloadCapturedImage);
 
 function downloadCapturedImage(e) {
     console.log("image captured!");
@@ -223,3 +242,9 @@ function downloadCapturedImage(e) {
     a.click();
     a.remove();
 }
+
+Object.assign(window, {
+    $hitlist,
+    data,
+    commitData,
+})
