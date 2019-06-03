@@ -41,10 +41,10 @@ Steps to use camera
 // ================
 
 function CameraPage() {
-    const $videoStream = _("video", {autoplay: true, id: "video-stream"});
-    const $captureButton = _("button", {id: "camera-click", "aria-label": "take photo"});
+    const $videoStream = _("video", {autoplay: true, class: "video-stream"});
+    const $captureButton = _("button", {class: "camera-click", "aria-label": "take photo"});
 
-    const el = _("div", {class: "page", id: "camera-page"},
+    const el = _("div", {class: "page camera-page"},
         $videoStream,
         $captureButton,
     );
@@ -56,10 +56,12 @@ function CameraPage() {
     // const $videoStream = document.getElementById("video-stream");
 
     window.onresize = e => {
-        $videoStream.width = document.body.offsetWidth;
-        $videoStream.height = document.body.offsetHeight;
+        console.log(`Resizing video stream from ${$videoStream.width}x${$videoStream.height}
+        to ${el.offsetWidth}x${el.offsetHeight}`);
+        $videoStream.width = el.offsetWidth;
+        $videoStream.height = el.offsetHeight;
     };
-    window.onresize();
+
 
     const medaConstraints = {
         audio: false,
@@ -97,7 +99,9 @@ function CameraPage() {
         $captureSound.play();
 
         // draw video frame to canvas
-
+        window.onresize();
+        console.log(`Resizing capture canvas from ${$captureCanvas.width}x${$captureCanvas.height}
+        to ${$videoStream.width}x${$videoStream.height}`);
         $captureCanvas.width = $videoStream.width;
         $captureCanvas.height = $videoStream.height;
 
@@ -109,12 +113,18 @@ function CameraPage() {
         const capturedImage = new Image();
         capturedImage.src = $captureCanvas.toDataURL("image/webp");
 
+        // not necessary. This is just for the event handler in case it is curious
+        capturedImage.width = $captureCanvas.width;
+        capturedImage.height = $captureCanvas.height;
+
         // broadcast custom "capture" event with image
 
-        const captureEvent = new Event("capture");
+        const captureEvent = new CustomEvent("capture", {
+            bubbles: true,
+        });
         captureEvent.data = {capturedImage};
 
-        $captureButton.dispatchEvent(captureEvent);
+        el.dispatchEvent(captureEvent);
 
 
     }
