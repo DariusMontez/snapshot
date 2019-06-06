@@ -92,7 +92,10 @@ function CameraPage() {
 
     $captureSound.src = "/audio/42899__freqman__canon-dos-d30-no-focus.wav";
 
-    $captureButton.onclick = e => {
+    $captureButton.onclick = capture;
+    $videoStream.onclick = capture;
+
+    function capture() {
         // play capture sound!
         $captureSound.play();
 
