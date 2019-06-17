@@ -1,4 +1,4 @@
-import _ from './scripts/elements.js'
+import _ from './elements.js'
 
 /*
 Steps to use camera
