@@ -190,23 +190,30 @@ const $hitlist = new Hitlist({el: document.getElementById("hitlist")});
 
 function AddPlayerPage() {
     const el = _("div", {class: "page add-player-page"},
-        "Player's name",
-        _("input", {name: "name"}),
+        // _("p", {style: "margin: 8px"}, "Player's name"),
+        _("input", {name: "name", placeholder: "Player's name", style: "margin: 8px"}),
         _("button", {name: "add-photo"}, "Take photo"),
-        _("button", {name: "submit"}, "Add Player!"),
 
         _("img", {name: "photo-preview"}),
+
+        _("button", {name: "submit"}, "Add Player!"),
+        _("button", {name: "cancel"}, "Cancel"),
     );
 
     const $name = el.querySelector("input[name=name]");
     const $addPhotoBtn = el.querySelector("button[name=add-photo]");
     const $submitBtn = el.querySelector("button[name=submit]");
+    const $cancelButton = el.querySelector("button[name=cancel]");
     const $photoPreview = el.querySelector("img[name=photo-preview]");
 
     const newPlayer = {
         name: null,
         photoURL: "https://lorempixel.com/48/48",
         snaps: [],
+    };
+
+    $cancelButton.onclick = () => {
+        el.remove();
     };
 
     $addPhotoBtn.onclick = () => {
