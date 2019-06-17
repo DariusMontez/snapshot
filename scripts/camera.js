@@ -105,7 +105,7 @@ function CameraPage() {
         const captureEvent = new CustomEvent("capture", {
             bubbles: true,
         });
-        captureEvent.data = {capturedImage};
+        captureEvent.data = {capturedImage, imageData};
 
         el.dispatchEvent(captureEvent);
     };
@@ -123,7 +123,7 @@ function captureImageData($videoStream) {
     $captureCanvas.width = $videoStream.videoWidth;
     $captureCanvas.height = $videoStream.videoHeight;
 
-    console.log($captureCanvas.videoWidth, $videoStream.videoWidth);
+    console.log($captureCanvas.width, $videoStream.videoWidth);
 
     const ctx = $captureCanvas.getContext("2d");
     ctx.drawImage($videoStream, 0, 0, $videoStream.videoWidth, $videoStream.videoHeight);
@@ -144,8 +144,43 @@ function imageFromData(imageData) {
     return image;
 }
 
+function imageToData(image) {
+    const c = document.createElement("canvas");
+    window.onresize();
+    c.width = image.width;
+    c.height = image.height;
+
+    console.log(image.width, image.height);
+
+
+    ctx.drawImage(image, 0, 0, image.width, image.height);
+
+    // get an ImageData object
+    return ctx.getImageData(0, 0, c.width, c.height);
+}
+
+function scaleImageData(imageData, scale) {
+    const c = document.createElement("canvas");
+    const ctx = c.getContext("2d");
+
+    c.width = imageData.width;
+    c.height = imageData.height;
+
+    let newWidth = ~~(imageData.width * scale);
+    let newHeight = ~~(imageData.height * scale)
+    console.log(`scaleImageData: scaling image to ${newWidth}x${newHeight}`);
+
+    // ctx.scale(2, 2);
+    ctx.putImageData(imageData, 0, 0)
+    ctx.drawImage(c, 0, 0, newWidth, newHeight);
+    // ctx.scale(0.1, 0.1);
+    return ctx.getImageData(0, 0, newWidth, newHeight);
+}
+
 export {
     captureImageData,
     imageFromData,
+    imageToData,
+    scaleImageData,
     CameraPage
 }

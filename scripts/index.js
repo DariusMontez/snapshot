@@ -2,7 +2,13 @@
 
 import _ from './elements.js'
 // import data from '/scripts/mock-data.js'
-import {CameraPage, captureImageData} from './camera.js'
+import {
+    CameraPage,
+    captureImageData,
+    scaleImageData,
+    imageFromData,
+    imageToData
+} from './camera.js'
 
 const Player = {
     create({name, photoURL, snaps=[]}) {
@@ -223,10 +229,18 @@ function AddPlayerPage() {
 
         cameraPage.addEventListener("capture", e => {
             const image = e.data.capturedImage;
-            console.log(`captured and image! ${image.width}x${image.height}`);
+            console.log(`captured and image! ${e.data.imageData.width}x${e.data.imageData.height}`);
+
+            // make an 48px version of the original size
+            // (to save precious localStorage space)
+            let min = Math.min(e.data.imageData.width, e.data.imageData.height);
+            console.log(min);
+            let scale = 48 / min;
+            let d = scaleImageData(e.data.imageData, scale);
+            let smallImg = imageFromData(d);
 
             $photoPreview.src = image.src;
-            newPlayer.photoURL = image.src;
+            newPlayer.photoURL = smallImg.src;
 
             cameraPage.remove();
         });
