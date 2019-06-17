@@ -96,12 +96,11 @@ $drawer.querySelector(".btn-add-player").onclick = () => {
 };
 
 $drawer.querySelector(".btn-remove-players").onclick = () => {
-    for (let player of data.teams) {
-        if (data.me.snaps.includes(player.name)) {
-            Player.removeSnap(data.me, player);
-            Player.remove(player);
-        }
-    }
+    const snapped = (player) => data.me.snaps.includes(player.name);
+    data.teams.filter(snapped).map(player => {
+        Player.removeSnap(data.me, player);
+        Player.remove(player);
+    })
 
     $hitlist.update();
 };
@@ -287,6 +286,7 @@ Object.assign(window, {
     $hitlist,
     data,
     commitData,
+    Player,
 });
 
 function pollQR() {
