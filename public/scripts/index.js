@@ -1,8 +1,8 @@
 // Data Model
 
-import _ from '/scripts/elements.js'
+import _ from 'scripts/elements.js'
 // import data from '/scripts/mock-data.js'
-import {CameraPage, captureImageData} from '/scripts/camera.js'
+import {CameraPage, captureImageData} from 'scripts/camera.js'
 
 const Player = {
     create({name, photoURL, snaps=[]}) {
