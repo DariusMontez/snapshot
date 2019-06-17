@@ -90,7 +90,7 @@ function CameraPage() {
     // const $captureCanvas = document.createElement("canvas");
     const $captureSound = document.createElement("audio");
 
-    $captureSound.src = "/audio/42899__freqman__canon-dos-d30-no-focus.wav";
+    $captureSound.src = "audio/42899__freqman__canon-dos-d30-no-focus.wav";
 
     $captureButton.onclick = capture;
     $videoStream.onclick = capture;
