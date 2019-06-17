@@ -23,6 +23,12 @@ const Player = {
         commitData();
     },
 
+    remove(player) {
+        const index = data.teams.indexOf(player);
+        data.teams.splice(index, 1);
+        commitData();
+    },
+
     removeSnap(player, other) {
         const index = player.snaps.indexOf(other.name);
         player.snaps.splice(index, 1);
@@ -81,6 +87,17 @@ $drawer.querySelector(".btn-add-player").onclick = () => {
 
     const page = new AddPlayerPage();
     document.body.appendChild(page);
+};
+
+$drawer.querySelector(".btn-remove-players").onclick = () => {
+    for (let player of data.teams) {
+        if (data.me.snaps.includes(player.name)) {
+            Player.removeSnap(data.me, player);
+            Player.remove(player);
+        }
+    }
+
+    $hitlist.update();
 };
 
 const $progress = document.getElementById("progress");
