@@ -71,7 +71,8 @@ body {
 }
 
 #drawer-content {
-    display: grid;
+    display: flex;
+    flex-flow: column;
     height: 100vh;
 }
 
@@ -101,6 +102,7 @@ body {
 
 #hitlist {
     overflow-y: scroll;
+    flex: 1;
 }
 
 #hitlist ul {
@@ -156,6 +158,32 @@ img.circle {
 #victors {
     grid-column: 1/2;
     grid-row: 2/3;
+}
+
+/* button styling */
+
+button {
+    transition: all 0.1s ease;
+    margin: 8px;
+    height: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+button:active {
+    box-shadow: none;
+    transform: scale(0.9);
+}
+
+#drawer button {
+
+}
+
+.btn-remove-players {
+    border: none;
+    background: none;
+    color: #c43;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .camera-page .camera-click {
