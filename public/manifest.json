@@ -9,8 +9,8 @@
   "display": "standalone",
   "orientation": "any",
 
-  "scope": "/",
-  "start_url": "/",
+  "scope": "./",
+  "start_url": ".",
 
   "related_applications": [],
   "prefer_related_applications": false,
