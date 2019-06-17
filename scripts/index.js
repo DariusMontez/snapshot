@@ -111,7 +111,7 @@ const $progress = document.getElementById("progress");
 // ------
 
 const $header = document.getElementById("header");
-$header.textContent = data.me.name;
+// $header.textContent = data.me.name;
 
 
 // Hit List
