@@ -61,7 +61,7 @@ const initialData = {
 let data = getData(initialData);
 
 function updateOrientation() {
-    if (window.innerHeight > window.innerWidth) {
+    if (window.outerHeight > window.outerWidth) {
         document.body.classList.add("portrait");
         document.body.classList.remove("landscape");
     } else {
