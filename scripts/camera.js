@@ -55,12 +55,12 @@ function CameraPage() {
 
     // const $videoStream = document.getElementById("video-stream");
 
-    window.onresize = e => {
+    window.addEventListener("resize", function() {
         console.log(`Resizing video stream from ${$videoStream.width}x${$videoStream.height}
         to ${el.offsetWidth}x${el.offsetHeight}`);
         $videoStream.width = el.offsetWidth;
         $videoStream.height = el.offsetHeight;
-    };
+    });
 
 
     const medaConstraints = {
