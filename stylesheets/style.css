@@ -75,6 +75,10 @@ body {
     z-index: -1;
 }
 
+.shutter-page {
+    background: black;
+}
+
 #drawer {
 
     /* background: #48575a; */
