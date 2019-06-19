@@ -297,7 +297,7 @@ function downloadCapturedImage(e) {
     const $shutter = new ShutterPage();
     document.body.appendChild($shutter);
     setTimeout(function() {
-        // $shutter.remove();
+        $shutter.remove();
     }, 50);
 
     downloadDataURI(e.data.capturedImage.src);
