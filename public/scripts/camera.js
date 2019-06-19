@@ -212,7 +212,7 @@ function downloadDataURI(dataURI) {
         document.body.appendChild(a);
         a.click();
 
-        // a.remove();
+        a.remove();
     };
 
     callback(new Blob([arr]));
