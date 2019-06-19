@@ -266,13 +266,25 @@ function AddPlayerPage() {
 // CAMERA
 // ======
 
+function ShutterPage() {
+    const el = _("div", {class: "page shutter-page"});
+    return el;
+}
+
 $mainPage.addEventListener("capture", downloadCapturedImage);
 
 function downloadCapturedImage(e) {
     console.log("image captured!");
     // console.log(e.data);
 
-    // create a hyperlink to the image's src
+    // blink shutter
+    const $shutter = new ShutterPage();
+    document.body.appendChild($shutter);
+    setTimeout(function() {
+        $shutter.remove();
+    }, 50);
+
+
 
     downloadDataURI(e.data.capturedImage.src);
 
