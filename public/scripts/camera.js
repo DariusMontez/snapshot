@@ -200,19 +200,19 @@ function downloadDataURI(dataURI) {
 
         // console.log(a);
 
-        a.onclick = function() {
-            // ..and to wait a frame
-            requestAnimationFrame(function() {
-                console.log("link clicked")
-                URL.revokeObjectURL(a.href);
-            });
-            a.removeAttribute('href');
-        };
+        // a.onclick = function() {
+        //     // ..and to wait a frame
+        //     requestAnimationFrame(function() {
+        //         console.log("link clicked")
+        //         URL.revokeObjectURL(a.href);
+        //     });
+        //     a.removeAttribute('href');
+        // };
 
         document.body.appendChild(a);
         a.click();
 
-        a.remove();
+        // a.remove();
     };
 
     callback(new Blob([arr]));
