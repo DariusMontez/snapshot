@@ -17,6 +17,9 @@ git push origin `git subtree split --prefix public master`:gh-pages --force
 ```
 
 To-Do list:
-- fix photo download error
-- visual indication of camera click
-- zoom ability
+- [ ] fix photo download error
+- [ ] visual indication of camera click
+- [ ] zoom ability
+- [ ] leaderboard. gold, silver, and bronze crowns appear in checklist
+- [ ] show tutorial on first time opened
+- [ ] settings. L/R handed

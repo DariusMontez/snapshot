@@ -220,12 +220,11 @@ button:active {
 .camera-page .camera-click {
     grid-column: 1/2;
     grid-row: 1/2;
-    justify-self: center;
-    align-self: end;
+
 
     width: 64px;
     height: 64px;
-    margin-bottom: 40px;
+
     padding: 0;
 
 
@@ -257,4 +256,15 @@ button:active {
 }
 .camera-click::-moz-focus-inner {
     border: 0;
+}
+
+body.portrait .camera-page .camera-click {
+    margin-bottom: 40px;
+    justify-self: center;
+    align-self: end;
+}
+
+body.landscape .camera-page .camera-click {
+    justify-self: end;
+    align-self: center;
 }

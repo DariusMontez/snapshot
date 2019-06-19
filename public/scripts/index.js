@@ -60,6 +60,22 @@ const initialData = {
 
 let data = getData(initialData);
 
+function updateOrientation() {
+    if (window.innerHeight > window.innerWidth) {
+        document.body.classList.add("portrait");
+        document.body.classList.remove("landscape");
+    } else {
+        document.body.classList.add("landscape");
+        document.body.classList.remove("portrait");
+    }
+}
+
+window.addEventListener("resize", function() {
+    updateOrientation();
+});
+
+updateOrientation();
+
 // MAIN PAGE
 function MainPage() {
     const $camera = new CameraPage();
