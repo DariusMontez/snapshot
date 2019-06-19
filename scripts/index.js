@@ -7,7 +7,8 @@ import {
     captureImageData,
     scaleImageData,
     imageFromData,
-    imageToData
+    imageToData,
+    downloadDataURI
 } from './camera.js'
 
 const Player = {
@@ -273,13 +274,15 @@ function downloadCapturedImage(e) {
 
     // create a hyperlink to the image's src
 
-    const a = document.createElement("a");
-    a.href = e.data.capturedImage.src;
-    a.download = `${new Date()}.png`;
-    console.log(a);
-    document.body.append(a);
-    a.click();
-    a.remove();
+    downloadDataURI(e.data.capturedImage.src);
+
+    // const a = document.createElement("a");
+    // a.href = e.data.capturedImage.src;
+    // a.download = `${new Date()}.png`;
+    // console.log(a);
+    // document.body.append(a);
+    // a.click();
+    // a.remove();
 }
 
 Object.assign(window, {

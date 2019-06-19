@@ -177,10 +177,56 @@ function scaleImageData(imageData, scale) {
     return ctx.getImageData(0, 0, newWidth, newHeight);
 }
 
+
+
+// edited from https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob#Polyfill
+function downloadDataURI(dataURI) {
+    var binStr = atob(dataURI.split(',')[1]),
+      len = binStr.length,
+      arr = new Uint8Array(len);
+
+    for (var i = 0; i < len; i++) {
+      arr[i] = binStr.charCodeAt(i);
+    }
+
+    var callback = function(blob) {
+        var a = document.createElement('a');
+        a.download = `${new Date()}.png`;
+        a.innerHTML = `download`;
+        // the string representation of the object URL will be small enough to workaround the browser's limitations
+        a.href = URL.createObjectURL(blob);
+        // you must revoke the object URL,
+        //   but since we can't know when the download occured, we have to attach it on the click handler..
+
+        // console.log(a);
+
+        a.onclick = function() {
+            // ..and to wait a frame
+            requestAnimationFrame(function() {
+                console.log("link clicked")
+                URL.revokeObjectURL(a.href);
+            });
+            a.removeAttribute('href');
+        };
+
+        document.body.appendChild(a);
+        a.click();
+
+        a.remove();
+    };
+
+    callback(new Blob([arr]));
+  }
+
+
+
+//   dataURIToBlob(yourDataURL, callback);
+
 export {
     captureImageData,
     imageFromData,
     imageToData,
     scaleImageData,
+    downloadDataURI,
     CameraPage
 }
