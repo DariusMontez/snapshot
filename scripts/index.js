@@ -241,7 +241,7 @@ function AddPlayerPage() {
     $addPhotoBtn.onclick = () => {
         const cameraPage = new CameraPage();
         document.body.appendChild(cameraPage);
-        window.onresize(); // let cameraPage take up the screen
+        cameraPage.updateVideoSize();
 
         cameraPage.addEventListener("capture", e => {
             const image = e.data.capturedImage;
@@ -297,10 +297,8 @@ function downloadCapturedImage(e) {
     const $shutter = new ShutterPage();
     document.body.appendChild($shutter);
     setTimeout(function() {
-        $shutter.remove();
+        // $shutter.remove();
     }, 50);
-
-
 
     downloadDataURI(e.data.capturedImage.src);
 

@@ -40,6 +40,10 @@ Steps to use camera
 // CAMERA STREAMING
 // ================
 
+function updateVideoSize() {
+
+}
+
 function CameraPage() {
     const $videoStream = _("video", {autoplay: true, class: "video-stream"});
     const $captureButton = _("button", {class: "camera-click", "aria-label": "take photo"});
@@ -55,11 +59,15 @@ function CameraPage() {
 
     // const $videoStream = document.getElementById("video-stream");
 
-    window.addEventListener("resize", function() {
+    el.updateVideoSize = function() {
         console.log(`Resizing video stream from ${$videoStream.width}x${$videoStream.height}
         to ${el.offsetWidth}x${el.offsetHeight}`);
         $videoStream.width = el.offsetWidth;
         $videoStream.height = el.offsetHeight;
+    };
+
+    window.addEventListener("resize", function() {
+        el.updateVideoSize();
     });
 
 
@@ -119,7 +127,6 @@ function captureImageData($videoStream) {
     // draw video frame to canvas
 
     const $captureCanvas = document.createElement("canvas");
-    window.onresize();
     $captureCanvas.width = $videoStream.videoWidth;
     $captureCanvas.height = $videoStream.videoHeight;
 
@@ -146,7 +153,6 @@ function imageFromData(imageData) {
 
 function imageToData(image) {
     const c = document.createElement("canvas");
-    window.onresize();
     c.width = image.width;
     c.height = image.height;
 
