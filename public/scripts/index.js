@@ -10,12 +10,17 @@ import {
     imageToData,
     downloadDataURI
 } from './camera.js'
+import fileCache from './file-cache.js'
+
+
+/* File Cache */
+
 
 const Player = {
-    create({name, photoURL, snaps=[]}) {
+    create({name, photoFilename, snaps=[]}) {
         return {
             name,
-            photoURL,
+            photoFilename,
             snaps, // [Player]
         };
     },
@@ -31,6 +36,9 @@ const Player = {
     },
 
     remove(player) {
+        // delete image data to save space
+        fileCache.deleteFile(player.photoFilename);
+
         const index = data.teams.indexOf(player);
         data.teams.splice(index, 1);
         commitData();
@@ -52,7 +60,7 @@ function getData(initial={}) {
 }
 
 const initialData = {
-    me: {name: "Drew + Cassie", photoURL: "https://lorempixel.com/48/48", snaps: []},
+    me: {name: "Drew + Cassie", snaps: []},
     teams: [
 
     ],
@@ -137,9 +145,15 @@ const $header = document.getElementById("header");
 
 
 function HitlistRow({team}) {
+
+    const $img = _("img", {class: "circle"});
+    fileCache.readTextFile(team.photoFilename).then(src => {
+        $img.src = src;
+    });
+
     const el = _("li", {},
         team.name,
-        _("img", {src: team.photoURL, class: "circle"}),
+        $img,
     );
 
     el.team = team;
@@ -230,7 +244,7 @@ function AddPlayerPage() {
 
     const newPlayer = {
         name: null,
-        photoURL: "https://lorempixel.com/48/48",
+        photoFilename: "",
         snaps: [],
     };
 
@@ -256,7 +270,7 @@ function AddPlayerPage() {
             let smallImg = imageFromData(d);
 
             $photoPreview.src = image.src;
-            newPlayer.photoURL = smallImg.src;
+            el.photoURL = smallImg.src;
 
             cameraPage.remove();
         });
@@ -266,6 +280,8 @@ function AddPlayerPage() {
 
     function addPlayer() {
         newPlayer.name = $name.value;
+        newPlayer.photoFilename = `/photos/players/${newPlayer.name}-48x48.src`;
+        fileCache.writeTextFile(newPlayer.photoFilename, el.photoURL);
 
         console.log("New player added:", newPlayer);
 
